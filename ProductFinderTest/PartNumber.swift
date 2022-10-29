@@ -12,6 +12,7 @@ class PartNumber: NSManagedObject {
     
     @NSManaged var code          : String
     @NSManaged var productFamily : [String: [PartDetail]]
+    @NSManaged var partDetail    : PartDetail
     
     class PartDetail: NSManagedObject, Identifiable {
         @NSManaged var partNumber    : String
@@ -22,23 +23,25 @@ class PartNumber: NSManagedObject {
     func update(from partNumberProperties: PartNumberProperties) throws {
         
         let dictionary = partNumberProperties.dictionaryValue
-        let partInfo   = partNumberProperties.pecValue
+        let partDetail = partNumberProperties.partDetailValue
         
         guard let newCode          = dictionary["code"] as? String,
               let newProductFamily = dictionary["productFamily"] as? [String: [PartDetail]],
-              let newCienaPEC      = partInfo["partNumber"] as? String,
-              let newOrderable     = partInfo["orderable"] as? Bool,
-              let newDescription   = partInfo["pnDescription"] as? String
+              let newPartNumber    = partDetail["partNumber"] as? String,
+              let newOrderable     = partDetail["orderable"] as? Bool,
+              let newDescription   = partDetail["pnDescription"] as? String
         else {
             throw myError.programError("Missing Data")
         }
-        let partDetail = PartDetail()
+        let pecDetail = PartDetail()
         
         code          = newCode
         productFamily = newProductFamily
-        partDetail.partNumber    = newCienaPEC
-        partDetail.orderable     = newOrderable
-        partDetail.pnDescription = newDescription
+        pecDetail.partNumber    = newPartNumber
+        pecDetail.orderable     = newOrderable
+        pecDetail.pnDescription = newDescription
+        
+        productFamily[productFamily.description]?.append(pecDetail)
     }
 }
 
@@ -52,16 +55,16 @@ extension PartNumber: Identifiable {
     @discardableResult
     static func makePreviews(count: Int) -> [PartNumber] {
         var partNumbers = [PartNumber]()
-        let partDetails = PartDetail()
+        let partDetail = PartDetail()
         let viewContext = ProductProvider.preview.container.viewContext
         
         for _ in 0..<count {
             let partNumber = PartNumber(context: viewContext)
             partNumber.code           = UUID().uuidString
-            partNumber.productFamily  = ["Product Family 1": [partDetails]]
-            partDetails.partNumber    = "100-2400-500"
-            partDetails.orderable     = true
-            partDetails.pnDescription = "100-2400-500 Part Number Description"
+            partNumber.productFamily  = ["Product Family 1": [partDetail]]
+            partDetail.partNumber    = "100-2400-500"
+            partDetail.orderable     = true
+            partDetail.pnDescription = "100-2400-500 Part Number Description"
             
             partNumbers.append(partNumber)
         }
@@ -90,10 +93,10 @@ struct PartNumberProperties : Decodable {
         case productFamily
     }
     let code          : String
-    let productFamily : [String: [PartNumber]]
-    var partInfo      : PartNumber
+    let productFamily : [String: [PartDetail]]
+    var partDetail      : PartDetail
     
-    struct PartNumber : Decodable {
+    struct PartDetail : Decodable {
         
         var partNumber    : String
         var orderable     : Bool
@@ -108,24 +111,24 @@ struct PartNumberProperties : Decodable {
     
     init(from decoder: Decoder) throws {
         let values           = try decoder.container(keyedBy: CodingKeys.self)
-        let rawProductFamily = try? values.decode([String: [PartNumber]].self, forKey: .productFamily)
+        let rawProductFamily = try? values.decode([String: [PartDetail]].self, forKey: .productFamily)
         var rawPartsList     = try values.nestedUnkeyedContainer(forKey: .productFamily)
         
-        var partNumbers =  [PartNumber]()
-        self.partInfo = try PartNumber(from: decoder)
+        var partNumbers =  [PartNumberProperties.PartDetail]()
+        self.partDetail = try PartNumberProperties.PartDetail(from: decoder)
         
         while !rawPartsList.isAtEnd {
             
-            let rawPartNumber = try rawPartsList.nestedContainer(keyedBy: PartNumber.PecKeys.self)
-            self.partInfo.pnDescription = try rawPartNumber.decode(String.self, forKey: .partNumber)
+            let rawPartNumber = try rawPartsList.nestedContainer(keyedBy: PartDetail.PecKeys.self)
+            self.partDetail.pnDescription = try rawPartNumber.decode(String.self, forKey: .partNumber)
             
-            let rawOrderable = try rawPartsList.nestedContainer(keyedBy: PartNumber.PecKeys.self)
-            self.partInfo.orderable = try rawOrderable.decode(Bool.self, forKey: .orderable)
+            let rawOrderable = try rawPartsList.nestedContainer(keyedBy: PartDetail.PecKeys.self)
+            self.partDetail.orderable = try rawOrderable.decode(Bool.self, forKey: .orderable)
             
-            let rawPnDescription = try rawPartsList.nestedContainer(keyedBy: PartNumber.PecKeys.self)
-            self.partInfo.pnDescription = try rawPnDescription.decode(String.self, forKey: .pnDescription)
+            let rawPnDescription = try rawPartsList.nestedContainer(keyedBy: PartDetail.PecKeys.self)
+            self.partDetail.pnDescription = try rawPnDescription.decode(String.self, forKey: .pnDescription)
             
-            partNumbers.append(self.partInfo)
+            partNumbers.append(self.partDetail)
         }
         let code  = UUID().uuidString
         self.code = code
@@ -138,14 +141,14 @@ struct PartNumberProperties : Decodable {
     }
     var dictionaryValue: [String: Any] {
         [
-            "productFamily" : [productFamily.description: [pecValue]]
+            "productFamily" : [productFamily.description: [partDetailValue]]
         ]
     }
-    var pecValue: [String: Any] {
+    var partDetailValue: [String: Any] {
         [
-            "partNumber"    : partInfo.partNumber,
-            "orderable"     : partInfo.orderable,
-            "pnDescription" : partInfo.pnDescription
+            "partNumber"    : partDetail.partNumber,
+            "orderable"     : partDetail.orderable,
+            "pnDescription" : partDetail.pnDescription
         ]
     }
 }
