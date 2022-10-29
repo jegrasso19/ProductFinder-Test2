@@ -13,14 +13,11 @@ struct InitialView: View {
     @State private var navigated   : Bool = false
     @State private var dataLoaded  : Bool = false
     @State private var dataCleared : Bool = false
-    @State private var productFamilySelection : Set<String> = []
-    @State private var partNumberSelection    : Set<String> = []
+    @State private var partNumberSelection : Set<String> = []
     
     var buttonText : String
-    
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.productFamily, order: .forward)])
-    private var productFamilies: FetchedResults<ProductFamily>
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.partNumber, order: .forward)])
+
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.productFamily.description, order: .forward)])
     private var partNumbers: FetchedResults<PartNumber>
     
     var body: some View {
@@ -45,10 +42,7 @@ struct InitialView: View {
         Button(action: {
             self.dataCleared.toggle()
             Task {
-                productFamilySelection = Set(productFamilies.map { $0.code })
-                partNumberSelection    = Set(partNumbers.map { $0.code })
-
-                await deleteProductFamilies(for: productFamilySelection)
+                partNumberSelection = Set(partNumbers.map { $0.code })
                 await deletePartNumbers(for: partNumberSelection)
             }
         }, label: {
@@ -70,15 +64,7 @@ struct InitialView: View {
             print(myError.programError("Fetch Product Data Error"))
         }
     }
-    private func deleteProductFamilies(for codes: Set<String>) async {
-
-        do {
-            let productFamiliesToDelete = productFamilies.filter { codes.contains($0.code) }
-            try await productProvider.deleteProductFamilies(productFamiliesToDelete)
-        } catch {
-            print(myError.programError("Delete ProductFamily Error"))
-        }
-    }
+    
     private func deletePartNumbers(for codes: Set<String>) async {
 
         do {

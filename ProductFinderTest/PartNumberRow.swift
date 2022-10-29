@@ -9,24 +9,24 @@ import SwiftUI
 
 struct PartNumberRow: View {
     
-    @State var partNumber : PartNumber
+    @State var partDetail : PartNumber.PartDetail
     
     var body: some View {
         List {
-            Text("Product Family: \(partNumber.productFamily)")
-            Text("Description: \(partNumber.pnDescription)")
+            Text("Product Family: \(partDetail.partNumber)")
+            Text("Description: \(partDetail.pnDescription)")
             HStack {
                 Text("Orderable: ")
-                ColoredDot.showDot(partNumber.orderable)
+                ColoredDot.showDot(partDetail.orderable)
             }
         }
-        .navigationTitle("\(partNumber.partNumber)")
+        .navigationTitle("\(partDetail.partNumber)")
         .navigationBarItems(trailing: HomeButtonView() )
     }
 }
 
 struct PartNumberRow_Previews: PreviewProvider {
     static var previews: some View {
-        PartNumberRow(partNumber: PartNumber() )
+        PartNumberRow(partDetail: PartNumber.PartDetail() )
     }
 }

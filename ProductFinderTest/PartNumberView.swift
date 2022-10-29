@@ -9,26 +9,27 @@ import SwiftUI
 
 struct PartNumberView: View {
 
-    @State var productFamily: ProductFamily
+    @State var productFamily: PartNumber
         
     var body: some View {
         
-        let partNumbers = self.productFamily.partNumbers.sorted{ $0.code > $1.code }
-        
+        let productName = self.productFamily.productFamily.description
+        let partDetails = self.productFamily.productFamily[productName]?.sorted { $0.partNumber < $1.partNumber }
+
         List {
-            ForEach(partNumbers) { (partNumber) in
-                NavigationLink(destination: PartNumberRow(partNumber: partNumber)) {
-                    Text("\(partNumber.partNumber)")
+            ForEach(partDetails!) { (partDetail) in
+                NavigationLink(destination: PartNumberRow(partDetail: partDetail)) {
+                    Text("\(partDetail.partNumber)")
                 }
             }
         }
-        .navigationTitle("\(productFamily.productFamily)")
+        .navigationTitle("\(productName)")
         .navigationBarItems(trailing: HomeButtonView() )
     }
 }
 
 struct PartNumberView_Previews: PreviewProvider {
     static var previews: some View {
-        PartNumberView(productFamily: ProductFamily() )
+        PartNumberView(productFamily: PartNumber() )
     }
 }

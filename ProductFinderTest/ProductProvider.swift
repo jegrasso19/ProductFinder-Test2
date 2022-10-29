@@ -15,7 +15,7 @@ class ProductProvider: ObservableObject {
 
     static let preview: ProductProvider = {
         let provider = ProductProvider()
-        ProductFamily.makePreviews(count: 5)
+        PartNumber.makePreviews(count: 5)
         return provider
     }()
      
@@ -119,11 +119,6 @@ extension ProductProvider {
 
     func fetchProductData() async throws {
         
-        guard let productFamilyUrl = Bundle.main.url(forResource: "ProductFamilies", withExtension: "json"),
-            let productFamilyData = try? Data(contentsOf: productFamilyUrl)
-        else {
-            throw myError.programError("Failed to receive valid response and/or ProductFamily data.")
-        }
         guard let partNumberUrl = Bundle.main.url(forResource: "PartNumbers", withExtension: "json"),
             let partNumberData = try? Data(contentsOf: partNumberUrl)
         else {
@@ -132,23 +127,18 @@ extension ProductProvider {
         do {
             let jsonDecoder = JSONDecoder()
             
-            let productFamilyJSON = try jsonDecoder.decode(ProductFamilyJSON.self, from: productFamilyData)
-            let productFamilies = productFamilyJSON.productFamilies
-            print("Received \(productFamilies.count) Product Family records.")
-
             let partNumberJSON = try jsonDecoder.decode(PartNumberJSON.self, from: partNumberData)
             let partNumbers = partNumberJSON.partNumbers
             print("Received \(partNumbers.count) Part Number records.")
             print("Start importing product data to the store...")
-            try await importProductData(from: productFamilies, from: partNumbers)
+            try await importProductData(from: partNumbers)
             print("Finished importing product data.")
         } catch {
             throw myError.programError("Wrong Data Format for Product Family")
         }
     }
 
-    private func importProductData(from productFamilies: [ProductFamilyProperties], from partNumbers: [PartNumberProperties]) async throws {
-        guard !productFamilies.isEmpty else { return }
+    private func importProductData(from partNumbers: [PartNumberProperties]) async throws {
         guard !partNumbers.isEmpty else { return }
         
         let taskContext = newTaskContext()
@@ -156,18 +146,6 @@ extension ProductProvider {
         taskContext.name = "importProductDataContext"
         taskContext.transactionAuthor = "importProductData"
 
-        try await taskContext.perform {
-            let batchInsertRequest = self.productFamilyBatchInsertRequest(with: productFamilies)
-            if let fetchResult = try? taskContext.execute(batchInsertRequest),
-               let batchInsertResult = fetchResult as? NSBatchInsertResult,
-               let success = batchInsertResult.result as? Bool, success {
-                return
-            }
-            else {
-                throw myError.programError("Failed to execute ProductFamily batch import request.")
-            }
-
-        }        
         try await taskContext.perform {
 
             let batchInsertRequest = self.partNumberBatchInsertRequest(with: partNumbers)
@@ -181,43 +159,6 @@ extension ProductProvider {
             }
         }
         print("Successfully imported Product data.")
-
-        try await taskContext.perform {
-            
-            let productFamilyRequest = ProductFamily.fetchRequest() as! NSFetchRequest<ProductFamily>
-            let productFetchResult   = try! taskContext.fetch(productFamilyRequest)
-            
-            let partNumberRequest = PartNumber.fetchRequest() as! NSFetchRequest<PartNumber>
-            let partsFetchResult  = try! taskContext.fetch(partNumberRequest)
-             
-            for productFamily in productFetchResult {
-                for partNumber in partsFetchResult {
-                    
-                    if productFamily.productFamily == partNumber.productFamily {
-                        productFamily.partNumbers.insert(partNumber)
-                    }
-                }
-            }
-            do {
-                try taskContext.save()
-            } catch {
-                throw myError.programError("Failed to save taskContext")
-            }
-        }
-        print("Successfully merged Part Numbers with Product Families.")
-    }
-
-    private func productFamilyBatchInsertRequest(with productFamilies: [ProductFamilyProperties]) -> NSBatchInsertRequest {
-        var index = 0
-        let total = productFamilies.count
-
-        let batchInsertRequest = NSBatchInsertRequest(entity: ProductFamily.entity(), dictionaryHandler: { dictionary in
-            guard index < total else { return true }
-            dictionary.addEntries(from: productFamilies[index].dictionaryValue)
-            index += 1
-            return false
-        })
-        return batchInsertRequest
     }
 
     private func partNumberBatchInsertRequest(with partNumbers: [PartNumberProperties]) -> NSBatchInsertRequest {
@@ -231,30 +172,6 @@ extension ProductProvider {
             return false
         })
         return batchInsertRequest
-    }
-
-    func deleteProductFamilies(_ productFamilies: [ProductFamily]) async throws {
-        guard !productFamilies.isEmpty else {
-            print("ProductFamily database is empty.")
-            return
-        }
-        let objectIDs = productFamilies.map { $0.objectID }
-        let taskContext = newTaskContext()
-
-        taskContext.name = "deleteProductFamilyContext"
-        taskContext.transactionAuthor = "deleteProductFamilies"
-        print("Start deleting ProductFamily data from the store...")
-
-        try await taskContext.perform {
-            let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: objectIDs)
-            guard let fetchResult = try? taskContext.execute(batchDeleteRequest),
-                  let batchDeleteResult = fetchResult as? NSBatchDeleteResult,
-                  let success = batchDeleteResult.result as? Bool, success
-            else {
-                throw myError.programError("Failed to execute ProductFamily batch delete request.")
-            }
-        }
-        print("Successfully deleted ProductFamily data.")
     }
 
     func deletePartNumbers(_ partNumbers: [PartNumber]) async throws {
@@ -278,6 +195,6 @@ extension ProductProvider {
                 throw myError.programError("Failed to execute PartNumber batch delete request.")
             }
         }
-        print("Successfully deleted ProductFamily data.")
+        print("Successfully deleted PartNumber data.")
     }
 }

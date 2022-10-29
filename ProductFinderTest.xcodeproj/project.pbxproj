@@ -19,10 +19,8 @@
 		D0DE534F28985BBD009C39CD /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DE534E28985BBD009C39CD /* ContentView.swift */; };
 		D0DE535128985BBF009C39CD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0DE535028985BBF009C39CD /* Assets.xcassets */; };
 		D0DE535428985BBF009C39CD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D0DE535328985BBF009C39CD /* Preview Assets.xcassets */; };
-		D0DE535628985BBF009C39CD /* Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DE535528985BBF009C39CD /* Persistence.swift */; };
 		D0DE535928985BBF009C39CD /* ProductFinderTest.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = D0DE535728985BBF009C39CD /* ProductFinderTest.xcdatamodeld */; };
 		D0DE536228986DE3009C39CD /* PartNumbers.json in Resources */ = {isa = PBXBuildFile; fileRef = D0DE536028986DE3009C39CD /* PartNumbers.json */; };
-		D0DE536528987159009C39CD /* ProductFamily.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DE536428987159009C39CD /* ProductFamily.swift */; };
 		D0DE53672898808E009C39CD /* PartNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DE53662898808E009C39CD /* PartNumber.swift */; };
 		D0DE53692898826B009C39CD /* ProductProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0DE53682898826B009C39CD /* ProductProvider.swift */; };
 /* End PBXBuildFile section */
@@ -41,10 +39,8 @@
 		D0DE534E28985BBD009C39CD /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		D0DE535028985BBF009C39CD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D0DE535328985BBF009C39CD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		D0DE535528985BBF009C39CD /* Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Persistence.swift; sourceTree = "<group>"; };
 		D0DE535828985BBF009C39CD /* ProductFinderTest.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ProductFinderTest.xcdatamodel; sourceTree = "<group>"; };
 		D0DE536028986DE3009C39CD /* PartNumbers.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PartNumbers.json; sourceTree = "<group>"; };
-		D0DE536428987159009C39CD /* ProductFamily.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductFamily.swift; sourceTree = "<group>"; };
 		D0DE53662898808E009C39CD /* PartNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartNumber.swift; sourceTree = "<group>"; };
 		D0DE53682898826B009C39CD /* ProductProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductProvider.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -90,11 +86,9 @@
 				D0C5A61428F7B73600F495A4 /* HomeButtonView.swift */,
 				D0C5A61628F7B76500F495A4 /* ColoredDot.swift */,
 				D0DE53682898826B009C39CD /* ProductProvider.swift */,
-				D0DE536428987159009C39CD /* ProductFamily.swift */,
 				D0DE53662898808E009C39CD /* PartNumber.swift */,
 				D0DE535F28986DE3009C39CD /* Resources */,
 				D0DE535028985BBF009C39CD /* Assets.xcassets */,
-				D0DE535528985BBF009C39CD /* Persistence.swift */,
 				D0DE535728985BBF009C39CD /* ProductFinderTest.xcdatamodeld */,
 				D0DE535228985BBF009C39CD /* Preview Content */,
 			);
@@ -190,13 +184,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D0C5A60F28F7B62400F495A4 /* ProductFamilyRow.swift in Sources */,
-				D0DE535628985BBF009C39CD /* Persistence.swift in Sources */,
 				D0C5A60B28F7B57900F495A4 /* InitialView.swift in Sources */,
 				D0DE53672898808E009C39CD /* PartNumber.swift in Sources */,
 				D0C5A61128F7B6A900F495A4 /* PartNumberView.swift in Sources */,
 				D0DE534F28985BBD009C39CD /* ContentView.swift in Sources */,
 				D0C5A61328F7B6FC00F495A4 /* PartNumberRow.swift in Sources */,
-				D0DE536528987159009C39CD /* ProductFamily.swift in Sources */,
 				D0DE53692898826B009C39CD /* ProductProvider.swift in Sources */,
 				D0DE534D28985BBD009C39CD /* ProductFinderTestApp.swift in Sources */,
 				D0C5A60D28F7B5EA00F495A4 /* ProductFamilyView.swift in Sources */,

@@ -11,27 +11,34 @@ import SwiftUI
 class PartNumber: NSManagedObject {
     
     @NSManaged var code          : String
-    @NSManaged var productFamily : String
-    @NSManaged var partNumber    : String
-    @NSManaged var orderable     : Bool
-    @NSManaged var pnDescription : String
- 
+    @NSManaged var productFamily : [String: [PartDetail]]
+    
+    class PartDetail: NSManagedObject, Identifiable {
+        @NSManaged var partNumber    : String
+        @NSManaged var orderable     : Bool
+        @NSManaged var pnDescription : String
+    }
+    
     func update(from partNumberProperties: PartNumberProperties) throws {
         
         let dictionary = partNumberProperties.dictionaryValue
+        let partInfo   = partNumberProperties.pecValue
+        
         guard let newCode          = dictionary["code"] as? String,
-              let newProductFamily = dictionary["productFamily"] as? String,
-              let newCienaPEC      = dictionary["partNumber"] as? String,
-              let newOrderable     = dictionary["orderable"] as? Bool,
-              let newDescription   = dictionary["pnDescription"] as? String
+              let newProductFamily = dictionary["productFamily"] as? [String: [PartDetail]],
+              let newCienaPEC      = partInfo["partNumber"] as? String,
+              let newOrderable     = partInfo["orderable"] as? Bool,
+              let newDescription   = partInfo["pnDescription"] as? String
         else {
             throw myError.programError("Missing Data")
         }
+        let partDetail = PartDetail()
+        
         code          = newCode
         productFamily = newProductFamily
-        partNumber    = newCienaPEC
-        orderable     = newOrderable
-        pnDescription = newDescription
+        partDetail.partNumber    = newCienaPEC
+        partDetail.orderable     = newOrderable
+        partDetail.pnDescription = newDescription
     }
 }
 
@@ -45,14 +52,16 @@ extension PartNumber: Identifiable {
     @discardableResult
     static func makePreviews(count: Int) -> [PartNumber] {
         var partNumbers = [PartNumber]()
+        let partDetails = PartDetail()
         let viewContext = ProductProvider.preview.container.viewContext
+        
         for _ in 0..<count {
             let partNumber = PartNumber(context: viewContext)
-            partNumber.code          = UUID().uuidString
-            partNumber.productFamily = "Product Family 1"
-            partNumber.partNumber    = "100-2400-500"
-            partNumber.orderable     = true
-            partNumber.pnDescription = "100-2400-500 Part Number Description"
+            partNumber.code           = UUID().uuidString
+            partNumber.productFamily  = ["Product Family 1": [partDetails]]
+            partDetails.partNumber    = "100-2400-500"
+            partDetails.orderable     = true
+            partDetails.pnDescription = "100-2400-500 Part Number Description"
             
             partNumbers.append(partNumber)
         }
