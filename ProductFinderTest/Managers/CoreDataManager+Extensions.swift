@@ -20,9 +20,18 @@ extension CoreDataManager {
         do {
             let jsonDecoder = JSONDecoder()
             
+// There are two JSON decoders I created. PartDetailJSON and PartNumberJSON. I don't know which
+// one is best to use for this situation. This is where I'm looking for help as neither one works.
+//            PartDetailJSON uses this code
+//            let partDetailJSON = try jsonDecoder.decode(PartDetailJSON.self, from: jsonData)
+//            let partDetailPropertiesList = partDetailJSON.partDetailPropertiesList
+//            print("Received \(partDetailPropertiesList.count) Part Number records.")
+
+            // PartNumberJSON uses this code
             let partNumberJSON = try jsonDecoder.decode(PartNumberJSON.self, from: jsonData)
             let partNumberPropertiesList = partNumberJSON.partNumberPropertiesList
             print("Received \(partNumberPropertiesList.count) Part Number records.")
+            
             print("Start importing product data to the store...")
             try await importProductData(from: partNumberPropertiesList)
             print("Finished importing product data.")
