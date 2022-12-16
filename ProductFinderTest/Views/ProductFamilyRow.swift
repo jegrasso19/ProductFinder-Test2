@@ -10,17 +10,17 @@ import SwiftUI
 struct ProductFamilyRow: View {
     
     @EnvironmentObject var navigation : Navigation
-    @State var productFamily : PartNumber
+    @State var productFamily : ProductFamily
     
     var body: some View {
-        NavigationLink(destination: PartNumberView(productFamily: productFamily), tag: productFamily.productFamily.description, selection: $navigation.selection) {
-            Text("\(productFamily.productFamily.description)")
+        NavigationLink(destination: PartNumberView(productFamily: productFamily), tag: productFamily.name!, selection: $navigation.selection) {
+            Text("\(productFamily.name!)")
         }
     }
 }
 
 struct ProductFamilyRow_Previews: PreviewProvider {
     static var previews: some View {
-        ProductFamilyRow(productFamily: PartNumber() )
+        ProductFamilyRow(productFamily: ProductFamily() )
     }
 }

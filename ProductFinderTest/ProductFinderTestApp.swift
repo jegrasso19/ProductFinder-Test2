@@ -11,14 +11,14 @@ import SwiftUI
 struct ProductFinderTestApp: App {
     
     @StateObject var navigate = Navigation()
-    @StateObject var productProvider = ProductProvider.shared
+    @StateObject var coreDM = CoreDataManager.shared
 
     var body: some Scene {
         WindowGroup {
             ContentView()
                 .environmentObject(navigate)
-                .environmentObject(ProductProvider.shared)
-                .environment(\.managedObjectContext, productProvider.container.viewContext)
+                .environmentObject(CoreDataManager.shared)
+                .environment(\.managedObjectContext, coreDM.viewContext)
         }
     }
 }

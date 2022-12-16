@@ -10,8 +10,8 @@ import SwiftUI
 struct ProductFamilyView: View { //This is my home view
 
     @State private var searchText : String = ""
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.productFamily.description, order: .forward)])
-    var productFamilies : FetchedResults<PartNumber>
+    @FetchRequest(sortDescriptors: [SortDescriptor(\.name, order: .forward)])
+    var productFamilies : FetchedResults<ProductFamily>
     
     var query: Binding<String> {
         Binding {

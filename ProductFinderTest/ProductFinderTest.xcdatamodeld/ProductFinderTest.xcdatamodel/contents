@@ -1,19 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21279" systemVersion="21G115" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <entity name="PartDetail" representedClassName=".PartDetail" syncable="YES">
-        <attribute name="orderable" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
-        <attribute name="partNumber" optional="YES" attributeType="String"/>
-        <attribute name="pnDescription" optional="YES" attributeType="String"/>
-        <relationship name="productFamily" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PartNumber" inverseName="partDetail" inverseEntity="PartNumber"/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G217" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="PartDetail" representedClassName="PartDetail" syncable="YES" codeGenerationType="class">
+        <attribute name="id" attributeType="String"/>
+        <attribute name="orderable" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="partNumber" attributeType="String"/>
+        <attribute name="pnDescription" attributeType="String"/>
+        <relationship name="productFamily" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProductFamily" inverseName="partNumbers" inverseEntity="ProductFamily"/>
     </entity>
-    <entity name="PartNumber" representedClassName=".PartNumber" syncable="YES">
-        <attribute name="code" optional="YES" attributeType="String"/>
-        <attribute name="productFamily" optional="YES" attributeType="String"/>
-        <relationship name="partDetail" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PartDetail" inverseName="productFamily" inverseEntity="PartDetail"/>
-        <uniquenessConstraints>
-            <uniquenessConstraint>
-                <constraint value="code"/>
-            </uniquenessConstraint>
-        </uniquenessConstraints>
+    <entity name="ProductFamily" representedClassName="ProductFamily" syncable="YES" codeGenerationType="class">
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <relationship name="partNumbers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="PartDetail" inverseName="productFamily" inverseEntity="PartDetail"/>
     </entity>
 </model>

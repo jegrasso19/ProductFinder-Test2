@@ -9,7 +9,8 @@ import SwiftUI
 
 struct InitialView: View {
     
-    @EnvironmentObject var productProvider : ProductProvider
+    @EnvironmentObject var coreDM : CoreDataManager
+    @StateObject private var productFamilyListVM = ProductFamilyListViewModel()
     @State private var navigated   : Bool = false
     @State private var dataLoaded  : Bool = false
     @State private var dataCleared : Bool = false
@@ -17,10 +18,13 @@ struct InitialView: View {
     
     var buttonText : String
 
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.productFamily.description, order: .forward)])
-    private var partNumbers: FetchedResults<PartNumber>
+    //@FetchRequest(sortDescriptors: [SortDescriptor(\.productFamily.description, order: .forward)])
+    
+    //private var productFamilies = 
     
     var body: some View {
+        
+        //var productFamilies = productFamilyListVM.getAllProductFamilies()
         
         Button(action: {
             self.navigated.toggle()
@@ -42,8 +46,8 @@ struct InitialView: View {
         Button(action: {
             self.dataCleared.toggle()
             Task {
-                partNumberSelection = Set(partNumbers.map { $0.code })
-                await deletePartNumbers(for: partNumberSelection)
+//                partNumberSelection = Set(partNumbers.map { $0.code })
+//                await deletePartNumbers(for: partNumberSelection)
             }
         }, label: {
             Text("CLEAR DATA")
@@ -59,21 +63,21 @@ struct InitialView: View {
     private func fetchProductData() async {
 
         do {
-            try await productProvider.fetchProductData()
+            try await coreDM.fetchProductData()
         } catch {
             print(myError.programError("Fetch Product Data Error"))
         }
     }
     
-    private func deletePartNumbers(for codes: Set<String>) async {
-
-        do {
-            let partNumbersToDelete = partNumbers.filter { codes.contains($0.code) }
-            try await productProvider.deletePartNumbers(partNumbersToDelete)
-        } catch {
-            print(myError.programError("Delete PartNumber Error"))
-        }
-    }
+//    private func deletePartNumbers(for codes: Set<String>) async {
+//
+//        do {
+//            let partNumbersToDelete = partNumbers.filter { codes.contains($0.code) }
+//            try await coreDM.deletePartNumbers(partNumbersToDelete)
+//        } catch {
+//            print(myError.programError("Delete PartNumber Error"))
+//        }
+//    }
 }
 
 struct InitialView_Previews: PreviewProvider {
