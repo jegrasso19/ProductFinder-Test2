@@ -18,7 +18,7 @@ struct ProductFamilyView: View { //This is my home view
             searchText
         } set: { newValue in
             searchText = newValue
-            productFamilies.nsPredicate = newValue.isEmpty ? nil : NSPredicate(format: "productFamily CONTAINS %@", newValue.uppercased())
+            productFamilies.nsPredicate = newValue.isEmpty ? nil : NSPredicate(format: "name CONTAINS %@", newValue.uppercased())
         }
     }
     var body: some View {

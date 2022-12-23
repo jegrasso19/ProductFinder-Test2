@@ -30,7 +30,7 @@ class PartNumberListViewModel: NSObject, ObservableObject {
 
 struct PartNumberViewModel {
     
-    let partDetail: PartDetailProperties
+    let partDetail: PartNumberInfo
     
     var orderable: Bool {
         return partDetail.orderable
@@ -42,13 +42,5 @@ struct PartNumberViewModel {
     
     var pnDescription: String {
         return partDetail.pnDescription
-    }
-    
-    var productFamily: String {
-        return partDetail.productFamily
-    }
-    
-    var id: String {
-        return partDetail.id
     }
 }

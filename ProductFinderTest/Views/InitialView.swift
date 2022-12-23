@@ -10,21 +10,13 @@ import SwiftUI
 struct InitialView: View {
     
     @EnvironmentObject var coreDM : CoreDataManager
-    @StateObject private var productFamilyListVM = ProductFamilyListViewModel()
     @State private var navigated   : Bool = false
     @State private var dataLoaded  : Bool = false
     @State private var dataCleared : Bool = false
-    @State private var partNumberSelection : Set<String> = []
     
     var buttonText : String
-
-    //@FetchRequest(sortDescriptors: [SortDescriptor(\.productFamily.description, order: .forward)])
-    
-    //private var productFamilies = 
     
     var body: some View {
-        
-        //var productFamilies = productFamilyListVM.getAllProductFamilies()
         
         Button(action: {
             self.navigated.toggle()
@@ -36,7 +28,7 @@ struct InitialView: View {
         Button(action: {
             self.dataLoaded.toggle()
             Task {
-                await self.fetchProductData()
+                try await self.coreDM.fetchProductData()
             }
         }, label: {
             Text("LOAD DATA")
@@ -46,8 +38,7 @@ struct InitialView: View {
         Button(action: {
             self.dataCleared.toggle()
             Task {
-//                partNumberSelection = Set(partNumbers.map { $0.code })
-//                await deletePartNumbers(for: partNumberSelection)
+//                self.coreVM.deleteProductData()
             }
         }, label: {
             Text("CLEAR DATA")
@@ -59,25 +50,6 @@ struct InitialView: View {
             EmptyView()
         }
     }
-    
-    private func fetchProductData() async {
-
-        do {
-            try await coreDM.fetchProductData()
-        } catch {
-            print(myError.programError("Fetch Product Data Error"))
-        }
-    }
-    
-//    private func deletePartNumbers(for codes: Set<String>) async {
-//
-//        do {
-//            let partNumbersToDelete = partNumbers.filter { codes.contains($0.code) }
-//            try await coreDM.deletePartNumbers(partNumbersToDelete)
-//        } catch {
-//            print(myError.programError("Delete PartNumber Error"))
-//        }
-//    }
 }
 
 struct InitialView_Previews: PreviewProvider {
