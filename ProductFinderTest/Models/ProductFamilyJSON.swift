@@ -28,7 +28,7 @@ struct ProductFamilyJSON: Decodable {
     // The key is the product family name, and the value is an array of PartNumber.
     //
     private(set) var productFamilies = [ProductFamilyProperties]()
-    
+ 
     init(from decoder: Decoder) throws {
         
         var rootContainer = try decoder.unkeyedContainer()
@@ -55,6 +55,6 @@ struct ProductFamilyJSON: Decodable {
                 productFamilies.append(productFamily)
             }
         }
-        print(productFamilies) // productFamilies contains the dictionary of [productFamilyName: PartNumber array]
+        print(productFamilies)
     }
 }
