@@ -9,21 +9,26 @@ import SwiftUI
 
 struct ProductFamilyView: View { //This is my home view
 
+
+    @StateObject private var productFamilyListVM = ProductFamilyListViewModel()
     @State private var searchText : String = ""
-    @FetchRequest(sortDescriptors: [SortDescriptor(\.name, order: .forward)])
-    var productFamilies : FetchedResults<ProductFamily>
     
-    var query: Binding<String> {
-        Binding {
-            searchText
-        } set: { newValue in
-            searchText = newValue
-            productFamilies.nsPredicate = newValue.isEmpty ? nil : NSPredicate(format: "name CONTAINS %@", newValue.uppercased())
-        }
+    var productFamilies: [ProductFamilyViewModel] {
+        productFamilyListVM.returnProductFamilies()
     }
+        
+//    var query: Binding<String> {
+//        Binding {
+//            searchText
+//        } set: { newValue in
+//            searchText = newValue
+//            productFamilyListVM.productFamilies.nsPredicate = newValue.isEmpty ? nil : NSPredicate(format: "name CONTAINS %@", newValue.uppercased())
+//        }
+//    }
+    
     var body: some View {
         List {
-            ForEach(productFamilies) { (productFamily) in
+            ForEach(productFamilies, id: \.objectId) { (productFamily) in
                 ProductFamilyRow(productFamily: productFamily)
             }
         }

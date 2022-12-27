@@ -12,7 +12,7 @@ struct ProductFamilyProperties : Decodable {
 
     var code: String
     var name: String
-    var partNumbers: Array<PartNumberInfo>
+    var partNumbers: Array<PartDetailInfo>
     
     enum CodingKeys: String, CodingKey {
         case code
@@ -25,7 +25,7 @@ struct ProductFamilyProperties : Decodable {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let rawCode = try? values.decode(String.self, forKey: .code)
         let rawName = try? values.decode(String.self, forKey: .name)
-        let rawPartNumbers = try? values.decode(Array<PartNumberInfo>.self, forKey: .partNumbers)
+        let rawPartNumbers = try? values.decode(Array<PartDetailInfo>.self, forKey: .partNumbers)
         
         guard let code = rawCode,
               let name = rawName,

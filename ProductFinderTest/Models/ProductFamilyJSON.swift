@@ -9,7 +9,7 @@ import Foundation
 
 struct ProductFamilyJSON: Decodable {
 
-    // Add a struct that conforms with CodingKey so we can retrieve the product family name as a key
+    // Struct that conforms with CodingKey so we can retrieve the product family name as a key
     //
     private struct JSONCodingKeys: CodingKey {
         var stringValue: String
@@ -25,7 +25,7 @@ struct ProductFamilyJSON: Decodable {
         }
     }
     // This is the dictionary that contains the JSON data
-    // The key is the product family name, and the value is an array of PartNumber.
+    // The key is the product family name, and the value is an array of PartDetailInfo.
     //
     private(set) var productFamilies = [ProductFamilyProperties]()
  
@@ -33,6 +33,8 @@ struct ProductFamilyJSON: Decodable {
         
         var rootContainer = try decoder.unkeyedContainer()
         let nestedProductFamilyContainer = try rootContainer.nestedContainer(keyedBy: JSONCodingKeys.self)
+        // This is where my code fails. When decoding the JSON file, it never goes into the While loop.
+        //
         var productFamily = try ProductFamilyProperties(from: decoder)
         
         while !rootContainer.isAtEnd {
@@ -41,11 +43,11 @@ struct ProductFamilyJSON: Decodable {
             
             if var partNumberArrayContainer = try? nestedProductFamilyContainer.nestedUnkeyedContainer(forKey: productFamilyKey) {
                 
-                var partNumbers = Array<PartNumberInfo>()
+                var partNumbers = Array<PartDetailInfo>()
                 
                 while !partNumberArrayContainer.isAtEnd {
                     
-                    if let partNumber = try? partNumberArrayContainer.decode(PartNumberInfo.self) {
+                    if let partNumber = try? partNumberArrayContainer.decode(PartDetailInfo.self) {
                         partNumbers.append(partNumber)
                     }
                 }

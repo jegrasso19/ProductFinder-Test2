@@ -13,8 +13,8 @@ struct PartNumberRow: View {
     
     var body: some View {
         List {
-            Text("Product Family: \(partDetail.productFamily!)")
-            //Text("Description: \(partDetail.pnDescription)")
+            Text("Product Family: \(partDetail.productFamily.name)")
+            Text("Description: \(partDetail.pnDescription)")
             HStack {
                 Text("Orderable: ")
                 ColoredDot.showDot(partDetail.orderable)

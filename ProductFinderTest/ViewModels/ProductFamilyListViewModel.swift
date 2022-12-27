@@ -11,52 +11,40 @@ import CoreData
 class ProductFamilyListViewModel: NSObject, ObservableObject {
     
     @Published var productFamilies = [ProductFamilyViewModel]()
-    private let coreDM = CoreDataManager.shared.viewContext
+    private let coreDM = CoreDataManager.shared
     
     private var fetchedResultsController: NSFetchedResultsController<ProductFamily>!
     
     private func requestProductFamilies() -> NSFetchedResultsController<ProductFamily> {
         
-        let request: NSFetchRequest = ProductFamily.fetchRequest()
+        let request: NSFetchRequest = ProductFamily.fetchProductFamilyRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: request,
-                                                                managedObjectContext: coreDM,
-                                                                sectionNameKeyPath: nil,
-                                                                cacheName: nil)
+                                                                  managedObjectContext: coreDM.viewContext,
+                                                                  sectionNameKeyPath: nil,
+                                                                  cacheName: nil)
         fetchedResultsController.delegate = self
         try? fetchedResultsController.performFetch()
         
         return fetchedResultsController
     }
     
-    func loadProductFamilies() {
+    func returnProductFamilies() -> [ProductFamilyViewModel] {
         
         fetchedResultsController = requestProductFamilies()
         
-        DispatchQueue.main.async {
-            self.productFamilies = (self.fetchedResultsController.fetchedObjects ?? []).map(ProductFamilyViewModel.init)
-        }
+        self.productFamilies = (self.fetchedResultsController.fetchedObjects ?? []).map(ProductFamilyViewModel.init)
+        return self.productFamilies
     }
     
-//    func deleteProductFamilies() {
-//
-//        fetchedResultsController = requestProductFamilies()
-//        var productsToDelete : Set<String> = []
-//
-//        let productFamiliesToDelete = self.fetchedResultsController.fetchedObjects?.sorted(by: { productFamilies, productFamily in
-//            if !productFamily.productFamilyId!.isEmpty { return true }
-//        })
-//
-//        let productsToDelete = Set(productFamiliesToDelete.map { $0.productFamilyId })
-//                for productFamily in productFamiliesToDelete {
-//
-//                    do {
-//                        try coreDM.delete(productFamily)
-//                    } catch {
-//                        print(myError.programError("Delete ProductFamily error"))
-//                    }
-//        }
-//    }
+    func deleteProductFamilies() async throws {
+        
+        do {
+            try await self.coreDM.deleteProductData()
+        } catch {
+            throw myError.programError("Delete Product Families failed")
+        }
+    }
 }
 
 extension ProductFamilyListViewModel: NSFetchedResultsControllerDelegate {
@@ -73,15 +61,15 @@ struct ProductFamilyViewModel {
     
     let productFamily: ProductFamily
     
-    var productFamilyId: String {
-        return productFamily.code ?? "EMPTY"
+    var objectId: NSManagedObjectID {
+        return productFamily.objectID
     }
     
     var name: String {
-        return productFamily.name ?? "EMPTY"
+        return productFamily.name
     }
     
     var partNumbers: NSSet {
-        return productFamily.partNumbers ?? []
+        return productFamily.partNumbers
     }
 }

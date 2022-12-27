@@ -10,6 +10,7 @@ import SwiftUI
 struct InitialView: View {
     
     @EnvironmentObject var coreDM : CoreDataManager
+    @EnvironmentObject var productFamilyListVM : ProductFamilyListViewModel
     @State private var navigated   : Bool = false
     @State private var dataLoaded  : Bool = false
     @State private var dataCleared : Bool = false
@@ -38,7 +39,7 @@ struct InitialView: View {
         Button(action: {
             self.dataCleared.toggle()
             Task {
-//                self.coreVM.deleteProductData()
+                try await self.coreDM.deleteProductData()
             }
         }, label: {
             Text("CLEAR DATA")
