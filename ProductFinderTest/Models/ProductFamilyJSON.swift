@@ -25,7 +25,7 @@ struct ProductFamilyJSON: Decodable {
         }
     }
     // This is the dictionary that contains the JSON data
-    // The key is the product family name, and the value is an array of PartDetailInfo.
+    // The key is the ProductFamily name, and the value is an array of PartDetailInfo.
     //
     private(set) var productFamilies = [ProductFamilyProperties]()
  

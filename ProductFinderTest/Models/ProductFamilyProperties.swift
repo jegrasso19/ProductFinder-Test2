@@ -5,8 +5,7 @@
 //  Created by Joseph Grasso on 8/1/22.
 //
 
-import CoreData
-import SwiftUI
+import Foundation
 
 struct ProductFamilyProperties : Decodable {
 
