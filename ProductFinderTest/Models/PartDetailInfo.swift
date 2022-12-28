@@ -12,15 +12,15 @@ import Foundation
 struct PartDetailInfo: Decodable {
     
     // Attributes of PartDetail Class from CoreData
+    var code         : String
     var partNumber   : String
     var orderable    : Bool
     var pnDescription: String
-    //var productFamily: ProductFamily
     
     enum CodingKeys: String, CodingKey {
+        case code
         case partNumber
         case orderable
         case pnDescription
-        //case productFamily
     }
 }

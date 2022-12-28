@@ -13,14 +13,14 @@ struct PartNumberView: View {
         
     var body: some View {
                 
-//        let partNumbers = (self.productFamily.partNumbers.allObjects as! [PartDetail]).sorted(by: { $0.objectId < $1.objectId })
+        let partNumbers = (self.productFamily.partNumbers.allObjects as! [PartDetail]).sorted(by: { $0.code < $1.code })
         
         List {
-//            ForEach(partNumbers, id: \.objectId) { (partNumber) in
-//                NavigationLink(destination: PartNumberRow(partDetail: partNumber)) {
-//                    Text("\(partNumber.partNumber)")
-//                }
-//            }
+            ForEach(partNumbers, id: \.code) { (partNumber) in
+                NavigationLink(destination: PartNumberRow(partDetail: partNumber)) {
+                    Text("\(partNumber.partNumber)")
+                }
+            }
         }
         .navigationTitle("\(productFamily.name)")
         .navigationBarItems(trailing: HomeButtonView() )

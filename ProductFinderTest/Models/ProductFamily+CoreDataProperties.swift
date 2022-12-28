@@ -16,7 +16,7 @@ extension ProductFamily {
         return NSFetchRequest<ProductFamily>(entityName: "ProductFamily")
     }
 
-    @NSManaged public var objectId: NSManagedObjectID
+    @NSManaged public var code: String
     @NSManaged public var name: String
     @NSManaged public var partNumbers: NSSet
 

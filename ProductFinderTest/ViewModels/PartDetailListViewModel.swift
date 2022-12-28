@@ -40,8 +40,8 @@ struct PartDetailViewModel {
     
     let partDetail: PartDetail
     
-    var objectId: NSManagedObjectID {
-        return partDetail.objectID
+    var code: String {
+        return partDetail.code
     }
     var orderable: Bool {
         return partDetail.orderable

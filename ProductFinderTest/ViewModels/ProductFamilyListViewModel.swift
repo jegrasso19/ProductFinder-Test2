@@ -65,6 +65,10 @@ struct ProductFamilyViewModel {
         return productFamily.objectID
     }
     
+    var code: String {
+        return productFamily.code
+    }
+    
     var name: String {
         return productFamily.name
     }

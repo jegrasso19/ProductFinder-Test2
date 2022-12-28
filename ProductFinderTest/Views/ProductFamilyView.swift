@@ -28,7 +28,7 @@ struct ProductFamilyView: View { //This is my home view
     
     var body: some View {
         List {
-            ForEach(productFamilies, id: \.objectId) { (productFamily) in
+            ForEach(productFamilies, id: \.code) { (productFamily) in
                 ProductFamilyRow(productFamily: productFamily)
             }
         }

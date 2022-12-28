@@ -90,8 +90,10 @@ extension CoreDataManager {
     func deleteProductData() async throws {
         
         let taskContext = self.newTaskContext()
-        let productFamiliesRequest = self.requestProductFamilies()
-        let productFamilies = (productFamiliesRequest.fetchedObjects ?? []).map(ProductFamilyViewModel.init)
+        let fetchedResultsController = requestProductFamilies()
+        try fetchedResultsController.performFetch()
+        
+        let productFamilies = (fetchedResultsController.fetchedObjects ?? []).map(ProductFamilyViewModel.init)
   
         guard !productFamilies.isEmpty else {
             print("ProductFamily database is empty.")
@@ -99,10 +101,7 @@ extension CoreDataManager {
         }
         let objectIDs = productFamilies.map { $0.objectId }
 
-        taskContext.name = "deleteProductDataContext"
-        taskContext.transactionAuthor = "deleteProductData"
         print("Start deleting Product data from the store...")
-
         try await taskContext.perform {
             let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: objectIDs)
             guard let fetchResult = try? taskContext.execute(batchDeleteRequest),
