@@ -18,7 +18,7 @@ extension ProductFamily {
 
     @NSManaged public var code: String
     @NSManaged public var name: String
-    @NSManaged public var partNumbers: NSSet
+    @NSManaged public var partNumbers: Array<PartDetail>
 
 }
 
@@ -32,10 +32,10 @@ extension ProductFamily {
     @NSManaged public func removeFromPartNumbers(_ value: PartDetail)
 
     @objc(addPartNumbers:)
-    @NSManaged public func addToPartNumbers(_ values: NSSet)
+    @NSManaged public func addToPartNumbers(_ values: Array<PartDetail>)
 
     @objc(removePartNumbers:)
-    @NSManaged public func removeFromPartNumbers(_ values: NSSet)
+    @NSManaged public func removeFromPartNumbers(_ values: Array<PartDetail>)
 
 }
 

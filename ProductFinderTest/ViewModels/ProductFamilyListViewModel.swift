@@ -15,23 +15,9 @@ class ProductFamilyListViewModel: NSObject, ObservableObject {
     
     private var fetchedResultsController: NSFetchedResultsController<ProductFamily>!
     
-    private func requestProductFamilies() -> NSFetchedResultsController<ProductFamily> {
-        
-        let request: NSFetchRequest = ProductFamily.fetchProductFamilyRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
-        let fetchedResultsController = NSFetchedResultsController(fetchRequest: request,
-                                                                  managedObjectContext: coreDM.viewContext,
-                                                                  sectionNameKeyPath: nil,
-                                                                  cacheName: nil)
-        fetchedResultsController.delegate = self
-        try? fetchedResultsController.performFetch()
-        
-        return fetchedResultsController
-    }
-    
     func returnProductFamilies() -> [ProductFamilyViewModel] {
         
-        fetchedResultsController = requestProductFamilies()
+        fetchedResultsController = coreDM.requestProductFamilies()
         
         self.productFamilies = (self.fetchedResultsController.fetchedObjects ?? []).map(ProductFamilyViewModel.init)
         return self.productFamilies
@@ -73,7 +59,7 @@ struct ProductFamilyViewModel {
         return productFamily.name
     }
     
-    var partNumbers: NSSet {
+    var partNumbers: Array<PartDetail> {
         return productFamily.partNumbers
     }
 }

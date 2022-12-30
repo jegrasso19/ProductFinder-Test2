@@ -30,33 +30,31 @@ struct ProductFamilyJSON: Decodable {
     private(set) var productFamilies = [ProductFamilyProperties]()
  
     init(from decoder: Decoder) throws {
-        
+
         var rootContainer = try decoder.unkeyedContainer()
-        let nestedProductFamilyContainer = try rootContainer.nestedContainer(keyedBy: JSONCodingKeys.self)
-        // This is where my code fails. When decoding the JSON file, it never goes into the While loop.
-        //
-        var productFamily = try ProductFamilyProperties(from: decoder)
         
         while !rootContainer.isAtEnd {
             
+            let nestedProductFamilyContainer = try rootContainer.nestedContainer(keyedBy: JSONCodingKeys.self)
             let productFamilyKey = nestedProductFamilyContainer.allKeys.first!
             
             if var partNumberArrayContainer = try? nestedProductFamilyContainer.nestedUnkeyedContainer(forKey: productFamilyKey) {
                 
-                var partNumbers = Array<PartDetailInfo>()
+                var partNumbers = Array<PartDetailProperties>()
                 
                 while !partNumberArrayContainer.isAtEnd {
-                    
-                    if let partNumber = try? partNumberArrayContainer.decode(PartDetailInfo.self) {
+                
+                    if let partNumber = try? partNumberArrayContainer.decode(PartDetailProperties.self) {
                         partNumbers.append(partNumber)
                     }
                 }
-                productFamily.code = UUID().uuidString
-                productFamily.name = productFamilyKey.stringValue
-                productFamily.partNumbers = partNumbers
+                let partNumbersSorted = partNumbers.sorted(by: { $0.partNumber < $1.partNumber })
+                
+                let productFamily = ProductFamilyProperties(code: UUID().uuidString,
+                                                            name: productFamilyKey.stringValue,
+                                                            partNumbers: partNumbersSorted)
                 productFamilies.append(productFamily)
             }
         }
-        print(productFamilies)
     }
 }

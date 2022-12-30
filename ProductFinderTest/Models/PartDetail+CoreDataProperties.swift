@@ -16,7 +16,6 @@ extension PartDetail {
         return NSFetchRequest<PartDetail>(entityName: "PartDetail")
     }
 
-    @NSManaged public var code: String
     @NSManaged public var orderable: Bool
     @NSManaged public var partNumber: String
     @NSManaged public var pnDescription: String

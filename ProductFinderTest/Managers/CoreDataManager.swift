@@ -7,15 +7,8 @@
 
 import Foundation
 import CoreData
-//import OSLog
 
 class CoreDataManager: ObservableObject {
-    
-    // MARK: Logging
-    
-    // let logger = Logger(subsystem: "com.josephgrasso.ProductFinder", category: "persistence")
-    
-    // MARK: Core Data
     
     let persistentContainer: NSPersistentContainer
     

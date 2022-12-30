@@ -20,7 +20,7 @@ struct PartNumberRow: View {
                 ColoredDot.showDot(partDetail.orderable)
             }
         }
-        //.navigationTitle("\(partDetail.partNumber)")
+        .navigationTitle("\(partDetail.partNumber)")
         .navigationBarItems(trailing: HomeButtonView() )
     }
 }

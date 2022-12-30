@@ -20,10 +20,10 @@ extension CoreDataManager {
         do {
             let jsonDecoder = JSONDecoder()
             
-            // PartNumberJSON uses this code
+            // ProductFamilyJSON uses this code
             let productFamilyJSON = try jsonDecoder.decode(ProductFamilyJSON.self, from: jsonData)
             let productFamilyList = productFamilyJSON.productFamilies
-            
+
             print("Received \(productFamilyList.count) Product records.")
             print("Start importing product data to the store...")
             
@@ -79,9 +79,24 @@ extension CoreDataManager {
         let request: NSFetchRequest = ProductFamily.fetchProductFamilyRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         fetchedResultsController = NSFetchedResultsController(fetchRequest: request,
-                                                                managedObjectContext: viewContext,
-                                                                sectionNameKeyPath: nil,
-                                                                cacheName: nil)
+                                                              managedObjectContext: viewContext,
+                                                              sectionNameKeyPath: nil,
+                                                              cacheName: nil)
+        try? fetchedResultsController.performFetch()
+        
+        return fetchedResultsController
+    }
+    
+    func requestPartNumbers() -> NSFetchedResultsController<PartDetail> {
+        
+        var fetchedResultsController: NSFetchedResultsController<PartDetail>!
+        
+        let request: NSFetchRequest<PartDetail> = PartDetail.fetchPartDetailRequest()
+        request.sortDescriptors = [NSSortDescriptor(key: "partNumber", ascending: true)]
+        fetchedResultsController = NSFetchedResultsController(fetchRequest: request,
+                                                              managedObjectContext: viewContext,
+                                                              sectionNameKeyPath: nil,
+                                                              cacheName: nil)
         try? fetchedResultsController.performFetch()
         
         return fetchedResultsController
@@ -114,4 +129,3 @@ extension CoreDataManager {
         print("Successfully deleted Product data.")
     }
 }
-

@@ -9,14 +9,14 @@ import SwiftUI
 
 struct PartNumberView: View {
 
-    @State var productFamily: ProductFamilyViewModel
+    @State var productFamily: ProductFamily
         
     var body: some View {
                 
-        let partNumbers = (self.productFamily.partNumbers.allObjects as! [PartDetail]).sorted(by: { $0.code < $1.code })
+        let partNumbers = (self.productFamily.partNumbers).sorted(by: { $0.partNumber < $1.partNumber })
         
         List {
-            ForEach(partNumbers, id: \.code) { (partNumber) in
+            ForEach(partNumbers) { (partNumber) in
                 NavigationLink(destination: PartNumberRow(partDetail: partNumber)) {
                     Text("\(partNumber.partNumber)")
                 }
@@ -29,6 +29,6 @@ struct PartNumberView: View {
 
 struct PartNumberView_Previews: PreviewProvider {
     static var previews: some View {
-        PartNumberView(productFamily: ProductFamilyViewModel(productFamily: ProductFamily()) )
+        PartNumberView(productFamily: ProductFamily() )
     }
 }

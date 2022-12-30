@@ -11,25 +11,12 @@ import CoreData
 class PartDetailListViewModel: NSObject, ObservableObject {
     
     @Published var partNumbers = [PartDetailViewModel]()
-    private var coreDM = CoreDataManager.shared.viewContext
+    private var coreDM = CoreDataManager.shared
     private var fetchedResultsController: NSFetchedResultsController<PartDetail>!
-    
-    func requestPartNumbers() -> NSFetchedResultsController<PartDetail> {
-        
-        let request: NSFetchRequest<PartDetail> = PartDetail.fetchPartDetailRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "partNumber", ascending: true)]
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request,
-                                                              managedObjectContext: coreDM,
-                                                              sectionNameKeyPath: nil,
-                                                              cacheName: nil)
-        try? fetchedResultsController.performFetch()
-        
-        return fetchedResultsController
-    }
     
     func returnPartNumbers() -> [PartDetailViewModel] {
         
-        fetchedResultsController = requestPartNumbers()
+        fetchedResultsController = coreDM.requestPartNumbers()
         
         self.partNumbers = (self.fetchedResultsController.fetchedObjects ?? []).map(PartDetailViewModel.init)
         return self.partNumbers
@@ -40,9 +27,10 @@ struct PartDetailViewModel {
     
     let partDetail: PartDetail
     
-    var code: String {
-        return partDetail.code
+    var objectId: NSManagedObjectID {
+        return partDetail.objectID
     }
+    
     var orderable: Bool {
         return partDetail.orderable
     }
