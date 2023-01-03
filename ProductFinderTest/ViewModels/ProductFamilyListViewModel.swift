@@ -5,7 +5,7 @@
 //  Created by Joseph Grasso on 11/19/22.
 //
 
-import Foundation
+import SwiftUI
 import CoreData
 
 class ProductFamilyListViewModel: NSObject, ObservableObject {
@@ -15,12 +15,13 @@ class ProductFamilyListViewModel: NSObject, ObservableObject {
     
     private var fetchedResultsController: NSFetchedResultsController<ProductFamily>!
     
-    func returnProductFamilies() -> [ProductFamilyViewModel] {
+    func getProductFamilies() {
         
         fetchedResultsController = coreDM.requestProductFamilies()
         
-        self.productFamilies = (self.fetchedResultsController.fetchedObjects ?? []).map(ProductFamilyViewModel.init)
-        return self.productFamilies
+        DispatchQueue.main.async {
+            self.productFamilies = (self.fetchedResultsController.fetchedObjects ?? []).map(ProductFamilyViewModel.init)
+        }
     }
     
     func deleteProductFamilies() async throws {

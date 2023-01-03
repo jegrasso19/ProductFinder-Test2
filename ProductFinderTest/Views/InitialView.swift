@@ -10,7 +10,6 @@ import SwiftUI
 struct InitialView: View {
     
     @EnvironmentObject var coreDM : CoreDataManager
-    @EnvironmentObject var productFamilyListVM : ProductFamilyListViewModel
     @State private var navigated   : Bool = false
     @State private var dataLoaded  : Bool = false
     @State private var dataCleared : Bool = false

@@ -9,7 +9,7 @@ import SwiftUI
 
 struct PartNumberView: View {
 
-    @State var productFamily: ProductFamily
+    @State var productFamily: ProductFamilyViewModel
         
     var body: some View {
                 
@@ -29,6 +29,6 @@ struct PartNumberView: View {
 
 struct PartNumberView_Previews: PreviewProvider {
     static var previews: some View {
-        PartNumberView(productFamily: ProductFamily() )
+        PartNumberView(productFamily: ProductFamilyViewModel(productFamily: ProductFamily() ))
     }
 }
