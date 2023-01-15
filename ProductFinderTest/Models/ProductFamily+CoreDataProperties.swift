@@ -19,7 +19,6 @@ extension ProductFamily {
     @NSManaged public var code: String
     @NSManaged public var name: String
     @NSManaged public var partNumbers: Array<PartDetail>
-
 }
 
 // MARK: Generated accessors for partNumbers

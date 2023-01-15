@@ -20,7 +20,6 @@ extension PartDetail {
     @NSManaged public var partNumber: String
     @NSManaged public var pnDescription: String
     @NSManaged public var productFamily: ProductFamily
-
 }
 
 extension PartDetail : Identifiable {

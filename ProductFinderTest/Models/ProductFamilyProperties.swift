@@ -13,7 +13,7 @@ struct ProductFamilyProperties : Decodable {
     var code: String
     var name: String
     var partNumbers: Array<PartDetailProperties>
-
+    
     var dictionaryValue: [String: Any] {
         [
             "code": code,
