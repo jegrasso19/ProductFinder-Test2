@@ -18,23 +18,29 @@ extension ProductFamily {
 
     @NSManaged public var code: String
     @NSManaged public var name: String
-    @NSManaged public var partNumbers: Array<PartDetail>
+    @NSManaged public var partNumbers: Set<PartDetail>
 }
 
 // MARK: Generated accessors for partNumbers
 extension ProductFamily {
-
+    
     @objc(addPartNumbersObject:)
     @NSManaged public func addToPartNumbers(_ value: PartDetail)
-
+    
     @objc(removePartNumbersObject:)
     @NSManaged public func removeFromPartNumbers(_ value: PartDetail)
-
+    
     @objc(addPartNumbers:)
-    @NSManaged public func addToPartNumbers(_ values: Array<PartDetail>)
-
+    @NSManaged public func addToPartNumbers(_ values: Set<PartDetail>)
+    
     @objc(removePartNumbers:)
-    @NSManaged public func removeFromPartNumbers(_ values: Array<PartDetail>)
+    @NSManaged public func removeFromPartNumbers(_ values: Set<PartDetail>)
+    
+    public var partNumbersSorted: Array<PartDetail> {
+        return partNumbers.sorted {
+            $0.partNumber < $1.partNumber
+        }
+    }
 
 }
 

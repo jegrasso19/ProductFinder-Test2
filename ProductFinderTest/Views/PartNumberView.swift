@@ -10,10 +10,11 @@ import SwiftUI
 struct PartNumberView: View {
 
     @State var productFamily: ProductFamilyViewModel
+    @StateObject private var partDetailListVM = PartDetailListViewModel()
         
     var body: some View {
                 
-        let partNumbers = (self.productFamily.partNumbers).sorted(by: { $0.partNumber < $1.partNumber })
+        let partNumbers = self.productFamily.partNumbers
         
         List {
             ForEach(partNumbers) { (partNumber) in

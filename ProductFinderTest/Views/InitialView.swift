@@ -38,7 +38,8 @@ struct InitialView: View {
         Button(action: {
             self.dataCleared.toggle()
             Task {
-                try await self.coreDM.deleteProductData()
+                try await self.coreDM.deleteProductFamilyData()
+                try await self.coreDM.deletePartDetailData()
             }
         }, label: {
             Text("CLEAR DATA")

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21512" systemVersion="21G320" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21513" systemVersion="21G320" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="PartDetail" representedClassName="PartDetail" syncable="YES">
         <attribute name="orderable" attributeType="Boolean" usesScalarValueType="YES"/>
         <attribute name="partNumber" attributeType="String"/>
         <attribute name="pnDescription" attributeType="String"/>
-        <relationship name="productFamily" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ProductFamily" inverseName="partNumbers" inverseEntity="ProductFamily"/>
+        <attribute name="productFamilyName" attributeType="String"/>
+        <relationship name="productFamily" maxCount="1" deletionRule="Nullify" destinationEntity="ProductFamily" inverseName="partNumbers" inverseEntity="ProductFamily"/>
     </entity>
     <entity name="ProductFamily" representedClassName="ProductFamily" syncable="YES">
         <attribute name="code" attributeType="String"/>
         <attribute name="name" attributeType="String"/>
-        <relationship name="partNumbers" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="PartDetail" inverseName="productFamily" inverseEntity="PartDetail"/>
+        <relationship name="partNumbers" toMany="YES" deletionRule="Cascade" destinationEntity="PartDetail" inverseName="productFamily" inverseEntity="PartDetail"/>
     </entity>
 </model>

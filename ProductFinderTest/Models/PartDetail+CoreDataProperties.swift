@@ -19,6 +19,7 @@ extension PartDetail {
     @NSManaged public var orderable: Bool
     @NSManaged public var partNumber: String
     @NSManaged public var pnDescription: String
+    @NSManaged public var productFamilyName: String
     @NSManaged public var productFamily: ProductFamily
 }
 

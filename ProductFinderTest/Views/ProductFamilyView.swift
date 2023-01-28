@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ProductFamilyView: View { //This is my home view
+struct ProductFamilyView: View { //This is the home view
 
     @StateObject private var productFamilyListVM = ProductFamilyListViewModel()
     @State private var searchText : String = ""
@@ -31,7 +31,7 @@ struct ProductFamilyView: View { //This is my home view
             if !searchText.isEmpty {
                 productFamilyListVM.productFamilies = productFamilyListVM.productFamilies.filter( { $0.name.contains(searchText) })
             } else {
-                productFamilyListVM.getProductFamilies()
+                getProductFamilies()
             }
         }
     }

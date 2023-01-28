@@ -24,10 +24,17 @@ class ProductFamilyListViewModel: NSObject, ObservableObject {
         }
     }
     
+    func returnProductFamilies() -> [ProductFamilyViewModel] {
+        
+        fetchedResultsController = coreDM.requestProductFamilies()
+
+        return (self.fetchedResultsController.fetchedObjects ?? []).map(ProductFamilyViewModel.init)
+    }
+    
     func deleteProductFamilies() async throws {
         
         do {
-            try await self.coreDM.deleteProductData()
+            try await self.coreDM.deleteProductFamilyData()
         } catch {
             throw myError.programError("Delete Product Families failed")
         }
@@ -61,6 +68,6 @@ struct ProductFamilyViewModel {
     }
     
     var partNumbers: Array<PartDetail> {
-        return productFamily.partNumbers
+        return productFamily.partNumbersSorted
     }
 }

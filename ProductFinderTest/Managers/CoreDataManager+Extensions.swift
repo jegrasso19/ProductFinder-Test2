@@ -28,6 +28,7 @@ extension CoreDataManager {
             print("Start importing ProductFamily data to the store...")
             
             try await importProductFamilyData(from: productFamilyList)
+            print("Finished importing ProductFamily Data.")
             
             for productFamily in productFamilyList {
                 let partNumbersList = productFamily.partNumbers
@@ -36,7 +37,11 @@ extension CoreDataManager {
                 print("Start importing PartNumber data to the store...")
                 try await importPartNumberData(productFamilyProperty: productFamily, partNumbers: partNumbersList)
             }
-            print("Finished importing product data.")
+            print("Finished importing PartDetail Data.")
+            
+            try await mergePartDetailsWithProductFamilies()
+            
+            print("Finished importing all product data.")
         } catch {
             throw myError.programError("Wrong Data Format for Product Families")
         }
@@ -115,7 +120,7 @@ extension CoreDataManager {
                 partDetail.partNumber = data.partNumber
                 partDetail.orderable = data.orderable
                 partDetail.pnDescription = data.pnDescription
-                partDetail.productFamily = productFamily
+                partDetail.productFamilyName = productFamily.name
             }
             index += 1
             return false
@@ -123,6 +128,32 @@ extension CoreDataManager {
         return batchInsertRequest
     }
     
+    func mergePartDetailsWithProductFamilies() async throws {
+        
+        let taskContext = newTaskContext()
+        try await taskContext.perform {
+            
+            let productFamilyRequest = ProductFamily.fetchProductFamilyRequest()
+            let productFamilies = try taskContext.fetch(productFamilyRequest)
+            
+            let partDetailRequest = PartDetail.fetchPartDetailRequest()
+            let partDetails = try taskContext.fetch(partDetailRequest)
+            
+            for productFamily in productFamilies {
+                
+                for partDetail in partDetails {
+
+                    if partDetail.productFamilyName == productFamily.name {
+                        productFamily.addToPartNumbers(partDetail)          // Adds PartDetail to ProductFamily Array
+                        //partDetail.productFamily = productFamily          // Adds Product Family to PartDetail
+                        // CoreData only needs of of these to execute. The other is automatically added
+                    }
+                }
+            }
+            try taskContext.save()
+        }
+    }
+
     func requestProductFamilies() -> NSFetchedResultsController<ProductFamily> {
         
         var fetchedResultsController: NSFetchedResultsController<ProductFamily>!
@@ -153,7 +184,7 @@ extension CoreDataManager {
         return fetchedResultsController
     }
     
-    func deleteProductData() async throws {
+    func deleteProductFamilyData() async throws {
         
         let taskContext = self.newTaskContext()
         let fetchedResultsController = requestProductFamilies()
@@ -167,16 +198,43 @@ extension CoreDataManager {
         }
         let objectIDs = productFamilies.map { $0.objectId }
 
-        print("Start deleting Product data from the store...")
+        print("Start deleting ProductFamily data from the store...")
         try await taskContext.perform {
             let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: objectIDs)
             guard let fetchResult = try? taskContext.execute(batchDeleteRequest),
                   let batchDeleteResult = fetchResult as? NSBatchDeleteResult,
                   let success = batchDeleteResult.result as? Bool, success
             else {
-                throw myError.programError("Failed to execute Product Family batch delete request.")
+                throw myError.programError("Failed to execute ProductFamily batch delete request.")
             }
         }
-        print("Successfully deleted Product data.")
+        print("Successfully deleted ProductFamily data.")
+    }
+    
+    func deletePartDetailData() async throws {
+        
+        let taskContext = self.newTaskContext()
+        let fetchedResultsController = requestPartNumbers()
+        try fetchedResultsController.performFetch()
+        
+        let partNumbers = (fetchedResultsController.fetchedObjects ?? []).map(PartDetailViewModel.init)
+  
+        guard !partNumbers.isEmpty else {
+            print("PartDetail database is empty.")
+            return
+        }
+        let objectIDs = partNumbers.map { $0.objectId }
+
+        print("Start deleting PartDetail data from the store...")
+        try await taskContext.perform {
+            let batchDeleteRequest = NSBatchDeleteRequest(objectIDs: objectIDs)
+            guard let fetchResult = try? taskContext.execute(batchDeleteRequest),
+                  let batchDeleteResult = fetchResult as? NSBatchDeleteResult,
+                  let success = batchDeleteResult.result as? Bool, success
+            else {
+                throw myError.programError("Failed to execute PartDetail batch delete request.")
+            }
+        }
+        print("Successfully deleted PartDetail data.")
     }
 }

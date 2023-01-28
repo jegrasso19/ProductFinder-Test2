@@ -9,7 +9,7 @@ import Foundation
 
 struct ProductFamilyJSON: Decodable {
 
-    // Struct that conforms with CodingKey so we can retrieve the product family name as a key
+    // Struct that conforms with CodingKey so we can retrieve the productFamily name as a key
     //
     private struct JSONCodingKeys: CodingKey {
         var stringValue: String
@@ -25,7 +25,7 @@ struct ProductFamilyJSON: Decodable {
         }
     }
     // This is the dictionary that contains the JSON data
-    // The key is the ProductFamily name, and the value is an array of PartDetailInfo.
+    // The key is the ProductFamily name, and the value is an array of PartDetailProperties.
     //
     private(set) var productFamilies = [ProductFamilyProperties]()
  

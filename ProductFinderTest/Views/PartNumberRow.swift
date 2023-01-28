@@ -13,7 +13,7 @@ struct PartNumberRow: View {
     
     var body: some View {
         List {
-            Text("Product Family: \(partDetail.productFamily.name)")
+            Text("Product Family: \(partDetail.productFamilyName)")
             Text("Description: \(partDetail.pnDescription)")
             HStack {
                 Text("Orderable: ")

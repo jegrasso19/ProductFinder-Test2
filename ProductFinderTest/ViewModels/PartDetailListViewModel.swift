@@ -21,6 +21,30 @@ class PartDetailListViewModel: NSObject, ObservableObject {
         self.partNumbers = (self.fetchedResultsController.fetchedObjects ?? []).map(PartDetailViewModel.init)
         return self.partNumbers
     }
+    
+    func deletePartDetails() async throws {
+        
+        do {
+            try await self.coreDM.deletePartDetailData()
+        } catch {
+            throw myError.programError("Delete PartDetails failed")
+        }
+    }
+    
+    //    func getPartNumbers(productFamily: ProductFamilyViewModel) -> [PartDetailViewModel] {
+    //
+    //        var partNumberList : [PartDetailViewModel] = []
+    //        fetchedResultsController = coreDM.requestPartNumbers()
+    //
+    //        let partNumbers = (self.fetchedResultsController.fetchedObjects ?? []).map(PartDetailViewModel.init)
+    //
+    //        for partNumber in partNumbers {
+    //            if partNumber.productFamilyName == productFamily.name {
+    //                partNumberList.append(partNumber)
+    //            }
+    //        }
+    //        return partNumberList
+    //    }
 }
 
 struct PartDetailViewModel {
@@ -41,5 +65,13 @@ struct PartDetailViewModel {
     
     var pnDescription: String {
         return partDetail.pnDescription
+    }
+    
+    var productFamilyName: String {
+        return partDetail.productFamilyName
+    }
+    
+    var productFamily: ProductFamily {
+        return partDetail.productFamily
     }
 }

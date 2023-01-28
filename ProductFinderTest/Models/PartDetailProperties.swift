@@ -20,7 +20,7 @@ struct PartDetailProperties: Decodable {
         [
             "partNumber": partNumber,
             "orderable": orderable,
-            "pnDescription": pnDescription
+            "pnDescription": pnDescription,
         ]
     }
 }
